@@ -53,10 +53,25 @@ def get_cred(
     *,
     check_env: bool = True,
 ) -> str | None:
-    """Look up a credential by name: .creds file first, then env."""
+    """Look up a credential by name.
+
+    Resolution chain: .creds file → os.environ → ~/.hermes/.env → default.
+    The third step (Hermes env) only activates when the discovery module
+    is reachable and Hermes is installed.
+    """
     value = load_creds(creds_path).get(name)
     if value:
         return value
     if check_env:
-        return os.environ.get(name, default)
+        env_val = os.environ.get(name)
+        if env_val:
+            return env_val
+        try:
+            from .discovery import resolve_cred as _resolve
+            hermes_val = _resolve(name)
+            if hermes_val:
+                return hermes_val
+        except Exception:
+            pass
+        return default
     return default

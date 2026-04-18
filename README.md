@@ -36,7 +36,7 @@ Core primitives for finding Hermes paths and resolving credentials from multiple
 from hermes_lib.runtime import get_cred, hermes_home
 
 home = hermes_home()                          # ~/.hermes or $HERMES_HOME
-api_key = get_cred("OPENAI_API_KEY", ".creds")  # checks .creds → env → ~/.hermes/.env
+api_key = get_cred("OPENAI_API_KEY", ".env")     # checks .env → env → ~/.hermes/.env
 ```
 
 ### `hermes_lib.discovery` — Ecosystem detection and unified credentials
